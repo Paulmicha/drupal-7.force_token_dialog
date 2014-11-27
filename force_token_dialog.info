@@ -1,0 +1,4 @@
+name = Force Token tree dialog
+description = This essentially stops rendering the jQuery table expand fieldset, and replaces it with an on-demand modal dialog.
+core = 7.x
+dependencies[] = token

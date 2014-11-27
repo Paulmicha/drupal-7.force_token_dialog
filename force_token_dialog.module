@@ -1,0 +1,36 @@
+<?php
+
+/**
+ * @file
+ * This essentially stops rendering the jQuery table expand fieldset,
+ * and replaces it with an on-demand modal dialog.
+ * @see http://www.pixelite.co.nz/article/how-speed-drupal-altering-tokens-ui
+ */
+
+/**
+ * Implements hook_theme_registry_alter().
+ */
+function force_token_dialog_theme_registry_alter(&$theme_registry) {
+  // Prevent theme('token_tree') from generating ridiculous amounts of
+  // inline markup.
+  $theme_registry['token_tree']['function'] = 'force_token_dialog_theme_token_tree';
+}
+ 
+/**
+ * By default theme('token_tree') renders ridiculous amounts of
+ * inline markup. We can prevent this by forcing it to always
+ * use its friendlier 'dialog' option (which instead outputs a
+ * link to a separate page with all the markup).
+ *
+ * n.b. If the path starts with 'token/tree' then we are requesting
+ * that separate page, and must render the full tree.
+ *
+ * @see force_token_dialog_theme_registry_alter().
+ */
+function force_token_dialog_theme_token_tree(&$variables) {
+  if (arg(0) != 'token' || arg(1) != 'tree') {
+    $variables['dialog'] = TRUE;
+  }
+  return theme_token_tree($variables);
+}
+
